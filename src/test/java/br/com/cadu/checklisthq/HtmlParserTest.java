@@ -23,16 +23,17 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import br.com.cadu.checklisthq.model.Item;
-{
+
+@Ignore
+public class HtmlParserTest {
 
 	String proximaPagina = "http://www.paninicomics.com.br/web/guest/checklist?p_p_id=ns_negozio_searchItem_WAR_nsnegozio_INSTANCE_1EW7&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_ns_negozio_searchItem_WAR_nsnegozio_INSTANCE_1EW7__spage=%2Fportlet_action%2FdisplayItem%2FviewSearch";
 	Integer anoInicial = 2013;
 	Integer mesInicial = 4;
 	String targetHQ = "VINGADORES VS X-MEN - ED. 1";
-	private final HttpHost proxy = new HttpHost("192.168.62.224", 3128);
+	private final HttpHost proxy = new HttpHost("192.168.62.224",3128);
 
 	@Test
-	@Ignore
 	public void test() throws IOException {
 
 		Document document = Jsoup.connect("http://www.paninicomics.com.br/web/guest/checklist?year=2013&month=1").timeout(5000).get();
@@ -42,7 +43,6 @@ import br.com.cadu.checklisthq.model.Item;
 	}
 
 	@Test
-	@Ignore
 	public void testProxy() throws IOException {
 
 		printHq(Jsoup.parse(gethtml("http://www.paninicomics.com.br/web/guest/checklist?year=2013&month=1")));
@@ -56,13 +56,13 @@ import br.com.cadu.checklisthq.model.Item;
 			String nome = element.select("div.cover a").first().attr("title");
 			String data = element.select("div.desc h3").first().html();
 			String imageUrl = element.select("div.cover img").first().attr("src");
-			return new Item(nome, data, imageUrl);
+			return new Item(nome,data,imageUrl);
 		}).forEach(item -> System.out.println(item));
 	}
 
-	private String gethtml(String urlString) throws MalformedURLException, IOException {
+	private String gethtml(String urlString) throws MalformedURLException,IOException {
 		URL url = new URL(urlString);
-		Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("192.168.62.224", 3128));
+		Proxy proxy = new Proxy(Proxy.Type.HTTP,new InetSocketAddress("192.168.62.224",3128));
 		HttpURLConnection uc = (HttpURLConnection) url.openConnection(proxy);
 
 		uc.connect();
@@ -70,7 +70,7 @@ import br.com.cadu.checklisthq.model.Item;
 		String line = null;
 		StringBuilder tmp = new StringBuilder();
 		BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()));
-		while ((line = in.readLine()) != null) {
+		while ( (line = in.readLine()) != null) {
 			tmp.append(line);
 		}
 		return tmp.toString();
@@ -82,7 +82,7 @@ import br.com.cadu.checklisthq.model.Item;
 
 		HttpGet httpGet = new HttpGet("http://www.paninicomics.com.br/web/guest/checklist?year=2013&month=1");
 
-		RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
+		RequestConfig.custom().setProxy(proxy).build();
 
 		CloseableHttpResponse response1 = httpclient.execute(httpGet);
 		// The underlying HTTP connection is still held by the response object
@@ -103,7 +103,7 @@ import br.com.cadu.checklisthq.model.Item;
 			String line = null;
 			StringBuilder tmp = new StringBuilder();
 			BufferedReader in = new BufferedReader(new InputStreamReader(entity1.getContent()));
-			while ((line = in.readLine()) != null) {
+			while ( (line = in.readLine()) != null) {
 				tmp.append(line);
 			}
 
